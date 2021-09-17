@@ -1,3 +1,6 @@
+// @ts-ignore
+import contractMap from '@metamask/contract-metadata'
+
 import { AccountAssetOptionType, AssetOptionType, TokenInfo } from '../constants/types'
 import {
   ALGOIconUrl,
@@ -104,83 +107,48 @@ export const NewAssetOptions: TokenInfo[] = [
   }
 ]
 
-export const AccountAssetOptions: AccountAssetOptionType[] = [
-  {
-    asset: {
-      contractAddress: '1',
-      name: 'Ethereum',
-      symbol: 'ETH',
-      icon: ETHIconUrl,
-      isErc20: true,
-      isErc721: false,
-      decimals: 8
-    },
-    assetBalance: '0',
-    fiatBalance: '0'
-  },
-  {
-    asset: {
-      contractAddress: '2',
-      name: 'Basic Attention Token',
-      symbol: 'BAT',
-      icon: BATIconUrl,
-      isErc20: true,
-      isErc721: false,
-      decimals: 8
-    },
-    assetBalance: '0',
-    fiatBalance: '0'
-  },
-  {
-    asset: {
-      contractAddress: '3',
-      name: 'Binance Coin',
-      symbol: 'BNB',
-      icon: BNBIconUrl,
-      isErc20: true,
-      isErc721: false,
-      decimals: 8
-    },
-    assetBalance: '0',
-    fiatBalance: '0'
-  },
-  {
-    asset: {
-      contractAddress: '4',
-      name: 'Bitcoin',
-      symbol: 'BTC',
-      icon: BTCIconUrl,
-      isErc20: true,
-      isErc721: false,
-      decimals: 8
-    },
-    assetBalance: '0',
-    fiatBalance: '0'
-  },
-  {
-    asset: {
-      contractAddress: '5',
-      name: 'Algorand',
-      symbol: 'ALGO',
-      icon: ALGOIconUrl,
-      isErc20: true,
-      isErc721: false,
-      decimals: 8
-    },
-    assetBalance: '0',
-    fiatBalance: '0'
-  },
-  {
-    asset: {
-      contractAddress: '6',
-      name: '0x',
-      symbol: 'ZRX',
-      icon: ZRXIconUrl,
-      isErc20: true,
-      isErc721: false,
-      decimals: 8
-    },
-    assetBalance: '0',
-    fiatBalance: '0'
+interface ContractMetadata {
+  [contractAddress: string]: {
+    name: string,
+    symbol: string,
+    logo: string,
+    erc20: boolean,
+    decimals: number
   }
+}
+
+const ETH = {
+  asset: {
+    contractAddress: '1',
+    name: 'Ethereum',
+    symbol: 'ETH',
+    icon: ETHIconUrl,
+    isErc20: true,
+    isErc721: false,
+    decimals: 8
+  },
+  assetBalance: '0',
+  fiatBalance: '0'
+}
+
+const erc20Tokens = Object.entries(contractMap as ContractMetadata).map(
+  ([contractAddress, { name, symbol, decimals, logo, erc20 }]) => ({
+    asset: {
+      contractAddress,
+      name: name,
+      symbol: symbol,
+      icon: require(`@metamask/contract-metadata/images/${logo}`),
+      isErc20: erc20,
+      isErc721: false,
+      decimals: decimals
+    },
+    assetBalance: '0',
+    fiatBalance: '0'
+  })
+)
+
+export const AccountAssetOptions: AccountAssetOptionType[] = [
+  ETH,
+  ...erc20Tokens.filter(token => token.asset.symbol === 'BAT'),
+  ...erc20Tokens.filter(token => token.asset.symbol !== 'BAT')
 ]
