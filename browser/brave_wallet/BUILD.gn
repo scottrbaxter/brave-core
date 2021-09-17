@@ -66,17 +66,23 @@ source_set("brave_wallet_delegate") {
     ]
   } else {
     sources += [
+      "brave_wallet_importer_delegate_impl.cc",
+      "brave_wallet_importer_delegate_impl.h",
       "brave_wallet_provider_delegate_impl.cc",
       "brave_wallet_provider_delegate_impl.h",
     ]
     deps += [
       "//brave/browser/brave_wallet",
       "//brave/browser/brave_wallet:tab_helper",
+      "//brave/browser/ethereum_remote_client",
+      "//brave/browser/ethereum_remote_client:browser",
       "//brave/browser/ui",
       "//brave/components/brave_wallet/common:mojom",
       "//chrome/browser/ui",
       "//components/content_settings/core/common",
       "//components/permissions",
+      "//extensions/browser",
+      "//extensions/common",
       "//mojo/public/cpp/bindings",
     ]
   }
