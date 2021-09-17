@@ -79,7 +79,6 @@ IN_PROC_BROWSER_TEST_F(BraveMainDelegateBrowserTest, DisabledFeatures) {
     &blink::features::kHandwritingRecognitionWebPlatformApiFinch,
     &blink::features::kInterestCohortAPIOriginTrial,
     &blink::features::kInterestCohortFeaturePolicy,
-    &blink::features::kLangClientHintHeader,
     &blink::features::kNavigatorPluginsFixed,
     &blink::features::kTextFragmentAnchor,
 #if !defined(OS_ANDROID)

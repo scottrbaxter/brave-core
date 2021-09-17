@@ -24,8 +24,7 @@
 
 const char kClientHints[] = "/ch.html";
 
-class ClientHintsBrowserTest : public InProcessBrowserTest,
-                               public ::testing::WithParamInterface<bool> {
+class ClientHintsBrowserTest : public InProcessBrowserTest {
  public:
   ClientHintsBrowserTest()
       : https_server_(net::EmbeddedTestServer::TYPE_HTTPS),
@@ -45,20 +44,6 @@ class ClientHintsBrowserTest : public InProcessBrowserTest,
   }
 
   ~ClientHintsBrowserTest() override {}
-
-  bool IsLangClientHintHeaderEnabled() { return GetParam(); }
-
-  void SetUp() override {
-    if (IsLangClientHintHeaderEnabled()) {
-      // Test that even with Lang CH feature enabled, there is no header.
-      scoped_feature_list_.InitAndEnableFeature(
-          blink::features::kLangClientHintHeader);
-    } else {
-      scoped_feature_list_.InitAndDisableFeature(
-          blink::features::kLangClientHintHeader);
-    }
-    InProcessBrowserTest::SetUp();
-  }
 
   void SetUpOnMainThread() override {
     host_resolver()->AddRule("*", "127.0.0.1");
@@ -91,14 +76,9 @@ class ClientHintsBrowserTest : public InProcessBrowserTest,
   DISALLOW_COPY_AND_ASSIGN(ClientHintsBrowserTest);
 };
 
-IN_PROC_BROWSER_TEST_P(ClientHintsBrowserTest, ClientHintsDisabled) {
-  EXPECT_EQ(
-      IsLangClientHintHeaderEnabled(),
-      base::FeatureList::IsEnabled(blink::features::kLangClientHintHeader));
+// Test that no client hints show up on the request's header.
+IN_PROC_BROWSER_TEST_F(ClientHintsBrowserTest, ClientHintsDisabled) {
   ASSERT_TRUE(ui_test_utils::NavigateToURL(browser(), client_hints_url()));
   EXPECT_EQ(0u, count_client_hints_headers_seen());
 }
 
-INSTANTIATE_TEST_SUITE_P(ClientHintsBrowserTest,
-                         ClientHintsBrowserTest,
-                         ::testing::Bool());

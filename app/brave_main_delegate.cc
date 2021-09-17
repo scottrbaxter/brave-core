@@ -214,7 +214,6 @@ bool BraveMainDelegate::BasicStartupComplete(int* exit_code) {
     blink::features::kHandwritingRecognitionWebPlatformApiFinch.name,
     blink::features::kInterestCohortAPIOriginTrial.name,
     blink::features::kInterestCohortFeaturePolicy.name,
-    blink::features::kLangClientHintHeader.name,
     blink::features::kNavigatorPluginsFixed.name,
     blink::features::kTextFragmentAnchor.name,
 #if !defined(OS_ANDROID)
