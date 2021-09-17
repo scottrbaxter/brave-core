@@ -33,14 +33,14 @@ using InstallError = update_client::InstallError;
 namespace {
 bool RewriteManifestFile(
     const base::FilePath& extension_root,
-    const base::DictionaryValue& manifest,
+    const base::Value& manifest,
     const std::string &public_key) {
 
   // Add the public key
   DCHECK(!public_key.empty());
 
-  std::unique_ptr<base::DictionaryValue> final_manifest(manifest.DeepCopy());
-  final_manifest->SetString("key", public_key);
+  std::unique_ptr<base::Value> final_manifest(manifest.DeepCopy());
+  final_manifest->SetStringKey("key", public_key);
 
   std::string manifest_json;
   JSONStringValueSerializer serializer(&manifest_json);
@@ -58,9 +58,9 @@ bool RewriteManifestFile(
   return true;
 }
 
-std::string GetManifestString(std::unique_ptr<base::DictionaryValue> manifest,
+std::string GetManifestString(base::Value* manifest,
     const std::string &public_key) {
-  manifest->SetString("key", public_key);
+  manifest->SetStringKey("key", public_key);
 
   std::string manifest_json;
   JSONStringValueSerializer serializer(&manifest_json);
@@ -89,7 +89,7 @@ BraveComponentInstallerPolicy::BraveComponentInstallerPolicy(
 BraveComponentInstallerPolicy::~BraveComponentInstallerPolicy() {}
 
 bool BraveComponentInstallerPolicy::VerifyInstallation(
-    const base::DictionaryValue& manifest,
+    const base::Value& manifest,
     const base::FilePath& install_dir) const {
   // The manifest file will generate a random ID if we don't provide one.
   // We want to write one with the actual extensions public key so we get
@@ -112,7 +112,7 @@ bool BraveComponentInstallerPolicy::RequiresNetworkEncryption() const {
 
 update_client::CrxInstaller::Result
 BraveComponentInstallerPolicy::OnCustomInstall(
-  const base::DictionaryValue& manifest,
+  const base::Value& manifest,
   const base::FilePath& install_dir) {
   return Result(InstallError::NONE);
 }
@@ -123,10 +123,10 @@ void BraveComponentInstallerPolicy::OnCustomUninstall() {
 void BraveComponentInstallerPolicy::ComponentReady(
     const base::Version& version,
     const base::FilePath& install_dir,
-    std::unique_ptr<base::DictionaryValue> manifest) {
+    base::Value manifest) {
   ready_callback_.Run(
       install_dir,
-      GetManifestString(std::move(manifest), base64_public_key_));
+      GetManifestString(&manifest, base64_public_key_));
 }
 
 base::FilePath BraveComponentInstallerPolicy::GetRelativeInstallDir() const {
