@@ -1,5 +1,5 @@
 diff --git a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettings.java b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettings.java
-index 81e798d66124f687cf5113f9c0209f92e64b2ea4..66ea45e129429a8ebfabf1f9244203c57c055d48 100644
+index 9783adbdc33b3dc398aa0533620b331530e3ff91..2a1b304eebf34f5f4fe19ded3266d060e3e7cb13 100644
 --- a/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettings.java
 +++ b/components/browser_ui/site_settings/android/java/src/org/chromium/components/browser_ui/site_settings/SiteSettings.java
 @@ -24,7 +24,7 @@ import org.chromium.content_public.browser.BrowserContextHandle;

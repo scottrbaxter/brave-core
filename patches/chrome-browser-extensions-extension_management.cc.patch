@@ -1,5 +1,5 @@
 diff --git a/chrome/browser/extensions/extension_management.cc b/chrome/browser/extensions/extension_management.cc
-index 698932e7d0285c4c3e2152cea0342231491318f0..69ad625b6ce0046ba78e3c6aae160e63000406e6 100644
+index b595a785621df2cbc9b57bd17a0fa359df295683..952993ddac4f1cfb61561e6dfa3ae705c0ac524b 100644
 --- a/chrome/browser/extensions/extension_management.cc
 +++ b/chrome/browser/extensions/extension_management.cc
 @@ -729,6 +729,7 @@ KeyedService* ExtensionManagementFactory::BuildServiceInstanceFor(
