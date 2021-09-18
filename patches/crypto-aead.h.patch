@@ -1,0 +1,12 @@
+diff --git a/crypto/aead.h b/crypto/aead.h
+index fdf59708ceef0155fe941b2fb3d94c88ca4799df..d683c341b1987f250ce3489c1a82f536593abd13 100644
+--- a/crypto/aead.h
++++ b/crypto/aead.h
+@@ -69,6 +69,7 @@ class CRYPTO_EXPORT Aead {
+ 
+   size_t NonceLength() const;
+ 
++  BRAVE_AEAD_H_
+  private:
+   bool Seal(base::span<const uint8_t> plaintext,
+             base::span<const uint8_t> nonce,

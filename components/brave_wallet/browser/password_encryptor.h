@@ -34,6 +34,11 @@ class PasswordEncryptor {
                base::span<const uint8_t> nonce,
                std::vector<uint8_t>* plaintext);
 
+  // This can only be used by wallet importer
+  bool DecryptForImporter(base::span<const uint8_t> ciphertext,
+                          base::span<const uint8_t> nonce,
+                          std::vector<uint8_t>* plaintext);
+
  private:
   explicit PasswordEncryptor(const std::vector<uint8_t> key);
 
