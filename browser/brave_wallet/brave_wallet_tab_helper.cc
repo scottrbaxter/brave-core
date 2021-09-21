@@ -34,6 +34,11 @@ BraveWalletTabHelper::~BraveWalletTabHelper() {
 }
 
 #if !defined(OS_ANDROID) && !defined(OS_IOS)
+void BraveWalletTabHelper::CloseBubbleOnDeactivate(bool close) {
+  if (wallet_bubble_manager_delegate_)
+    wallet_bubble_manager_delegate_->CloseOnDeactivate(close);
+}
+
 void BraveWalletTabHelper::ShowBubble() {
   wallet_bubble_manager_delegate_ =
       WalletBubbleManagerDelegate::Create(web_contents_, GetBubbleURL());

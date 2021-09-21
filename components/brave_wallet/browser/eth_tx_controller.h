@@ -64,9 +64,9 @@ class EthTxController : public KeyedService, public mojom::EthTxController {
                             MakeERC20ApproveDataCallback) override;
   void GetAllTransactionInfo(const std::string& from,
                              GetAllTransactionInfoCallback) override;
-  void GetMessageToSignOnHardwareDevice(
+  void GetMessageToSignFromTxData1559(
       mojom::TxData1559Ptr tx_data,
-      GetMessageToSignOnHardwareDeviceCallback callback) override;
+      GetMessageToSignFromTxData1559Callback callback) override;
 
   void AddObserver(
       ::mojo::PendingRemote<mojom::EthTxControllerObserver> observer) override;

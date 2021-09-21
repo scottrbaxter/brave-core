@@ -19,7 +19,12 @@ import {
 } from './style'
 
 // Custom types
-import { HardwareWallet, HardwareWalletAccount, HardwareWalletConnectOpts, LedgerDerivationPaths } from './types'
+import { HardwareWalletAccount, HardwareWalletConnectOpts, LedgerDerivationPaths } from './types'
+
+import {
+  kLedgerHardwareVendor,
+  kTrezorHardwareVendor
+} from '../../../../../constants/types'
 
 import HardwareWalletAccountsList from './accounts-list'
 
@@ -32,7 +37,7 @@ export interface Props {
 const derivationBatch = 4
 
 export default function (props: Props) {
-  const [selectedHardwareWallet, setSelectedHardwareWallet] = React.useState<HardwareWallet>(HardwareWallet.Ledger)
+  const [selectedHardwareWallet, setSelectedHardwareWallet] = React.useState<string>(kLedgerHardwareVendor)
   const [isConnecting, setIsConnecting] = React.useState<boolean>(false)
   const [accounts, setAccounts] = React.useState<Array<HardwareWalletAccount>>([])
   const [selectedDerivationPaths, setSelectedDerivationPaths] = React.useState<string[]>([])
@@ -55,7 +60,7 @@ export default function (props: Props) {
       setConnectionError(error.message)
     })
   }
-  const onConnectHardwareWallet = (hardware: HardwareWallet) => {
+  const onConnectHardwareWallet = (hardware: string) => {
     setIsConnecting(true)
 
     props.onConnectHardwareWallet({
@@ -82,11 +87,11 @@ export default function (props: Props) {
   }
 
   const onSelectLedger = () => {
-    setSelectedHardwareWallet(HardwareWallet.Ledger)
+    setSelectedHardwareWallet(kLedgerHardwareVendor)
   }
 
   const onSelectTrezor = () => {
-    setSelectedHardwareWallet(HardwareWallet.Trezor)
+    setSelectedHardwareWallet(kTrezorHardwareVendor)
   }
 
   const onSubmit = () => onConnectHardwareWallet(selectedHardwareWallet)
@@ -115,10 +120,10 @@ export default function (props: Props) {
     <>
       <HardwareTitle>{locale.connectHardwareTitle}</HardwareTitle>
       <HardwareButtonRow>
-        <HardwareButton onClick={onSelectLedger} isSelected={selectedHardwareWallet === HardwareWallet.Ledger}>
+        <HardwareButton onClick={onSelectLedger} isSelected={selectedHardwareWallet === kLedgerHardwareVendor}>
           <LedgerIcon />
         </HardwareButton>
-        <HardwareButton onClick={onSelectTrezor} isSelected={selectedHardwareWallet === HardwareWallet.Trezor}>
+        <HardwareButton onClick={onSelectTrezor} isSelected={selectedHardwareWallet === kTrezorHardwareVendor}>
           <TrezorIcon />
         </HardwareButton>
       </HardwareButtonRow>

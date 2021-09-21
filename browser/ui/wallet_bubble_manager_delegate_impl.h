@@ -16,6 +16,9 @@
 
 namespace brave_wallet {
 
+template <typename T>
+class BraveWebUIBubbleManagerT;
+
 class WalletBubbleManagerDelegateImpl : public WalletBubbleManagerDelegate {
  public:
   explicit WalletBubbleManagerDelegateImpl(content::WebContents* web_contents,
@@ -26,6 +29,7 @@ class WalletBubbleManagerDelegateImpl : public WalletBubbleManagerDelegate {
       const WalletBubbleManagerDelegateImpl&) = delete;
   ~WalletBubbleManagerDelegateImpl() override;
 
+  void CloseOnDeactivate(bool close) override;
   void ShowBubble() override;
   void CloseBubble() override;
   bool IsShowingBubble() override;
@@ -34,7 +38,8 @@ class WalletBubbleManagerDelegateImpl : public WalletBubbleManagerDelegate {
  private:
   content::WebContents* web_contents_;
   GURL webui_url_;
-  std::unique_ptr<WebUIBubbleManagerT<WalletPanelUI>> webui_bubble_manager_;
+  std::unique_ptr<BraveWebUIBubbleManagerT<WalletPanelUI>>
+      webui_bubble_manager_;
 };
 
 }  // namespace brave_wallet

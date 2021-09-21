@@ -29,6 +29,7 @@ class BraveWalletTabHelper
   ~BraveWalletTabHelper() override;
 
 #if !defined(OS_ANDROID) && !defined(OS_IOS)
+  void CloseBubbleOnDeactivate(bool close);
   void ShowBubble();
   void ShowApproveWalletBubble();
   void CloseBubble();

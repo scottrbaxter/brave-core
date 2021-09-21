@@ -65,6 +65,17 @@ async function getTokenPriceHistory (store: Store) {
   store.dispatch(WalletActions.portfolioPriceHistoryUpdated(result))
 }
 
+async function GetHardwareAccountInfo (address: string) {
+  const apiProxy = await getAPIProxy()
+  const hardwareAccounts = await apiProxy.keyringController.getHardwareAccounts()
+  for (const account of hardwareAccounts.accounts) {
+    if (account.address.toLowerCase() === address) {
+      return account
+    }
+  }
+  return null
+}
+
 async function refreshWalletInfo (store: Store) {
   const apiProxy = await getAPIProxy()
   const walletHandler = apiProxy.walletHandler
@@ -278,13 +289,18 @@ handler.on(WalletActions.sendTransaction.getType(), async (store, payload: SendT
 
 handler.on(WalletActions.approveTransaction.getType(), async (store, txInfo: TransactionInfo) => {
   const apiProxy = await getAPIProxy()
-  console.log(txInfo)
-  const {success, path, message, vendor} = await apiProxy.ethTxController.getMessageToSignOnHardwareDevice(txInfo.txData)
-  if (success) {
-    var device_keyring = await apiProxy.getKeyringsByType(vendor)
-    console.log(await device_keyring.signTransaction(path, message))
-    return
+  const hardwareAccount = await GetHardwareAccountInfo(txInfo.fromAddress)
+  if (hardwareAccount && hardwareAccount.hardware) {
+    const { success, message } = await apiProxy.ethTxController.getMessageToSignFromTxData1559(txInfo.txData)
+    if (success) {
+      let deviceKeyring = await apiProxy.getKeyringsByType(hardwareAccount.hardware.vendor)
+      console.log(hardwareAccount.hardware.path, message);
+      console.log(await deviceKeyring.signTransaction(hardwareAccount.hardware.path, message))
+      await refreshWalletInfo(store)
+      return
+    }
   }
+
   await apiProxy.ethTxController.approveTransaction(txInfo.id)
   await refreshWalletInfo(store)
 })

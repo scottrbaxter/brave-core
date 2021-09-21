@@ -11,8 +11,8 @@ import * as WalletActions from '../common/actions/wallet_actions'
 import LedgerBridgeKeyring from '../common/ledgerjs/eth_ledger_bridge_keyring'
 import { addSingletonGetter } from 'chrome://resources/js/cr.m.js'
 import {
-  HardwareWallet
-} from '../components/desktop/popup-modals/add-account-modal/hardware-wallet-connect/types'
+  kLedgerHardwareVendor
+} from '../constants/types'
 
 export default class WalletApiProxy {
   constructor() {
@@ -58,8 +58,7 @@ export default class WalletApiProxy {
   }
 
   getKeyringsByType(type) {
-    if (type == HardwareWallet.Ledger) {
-      console.log("getKeyringsByType", type, this.ledgerHardwareKeyring)
+    if (type == kLedgerHardwareVendor) {
       return this.ledgerHardwareKeyring;
     }
     return this.keyringController;

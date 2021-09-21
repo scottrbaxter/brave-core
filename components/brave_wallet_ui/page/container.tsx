@@ -361,7 +361,6 @@ function Container (props: Props) {
 
   const onSubmitBuy = (asset: AccountAssetOptionType) => {
     const url = BuyAssetUrl(selectedNetwork.chainId, asset, selectedAccount, buyAmount)
-    console.log(url)
     if (url) {
       window.open(url, '_blank')
     }
@@ -406,17 +405,15 @@ function Container (props: Props) {
 
   const onSubmitSend = () => {
     const asset = userVisibleTokensInfo.find((asset) => asset.symbol === fromAsset.asset.symbol)
-    const payload = {
+    // Gas price and limit will be filled with suggestions in eth_tx_controller.
+    props.walletActions.sendTransaction({
       from: selectedAccount.address,
       to: toAddress,
       value: toWei(sendAmount, asset?.decimals ?? 0),
       contractAddress: asset?.contractAddress ?? '',
       gasPrice: '',
       gasLimit: ''
-    }
-    console.log(payload)
-    // Gas price and limit will be filled with suggestions in eth_tx_controller.
-    props.walletActions.sendTransaction(payload)
+    })
   }
 
   const fetchFullTokenList = () => {
