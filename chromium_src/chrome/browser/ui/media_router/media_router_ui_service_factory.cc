@@ -22,6 +22,10 @@ namespace media_router {
 
 KeyedService* MediaRouterUIServiceFactory::BuildServiceInstanceFor(
     BrowserContext* context) const {
+// Chromecast is enabled by default on Android.
+// For Desktop, kBraveMediaRouter is used to track the current state of the
+// media router switch in brave://settings/extensions. The value of
+// kEnableMediaRouter is only updated to match kBraveMediaRouter on restart.
 #if !defined(OS_ANDROID)
   auto* pref_service = user_prefs::UserPrefs::Get(context);
   auto enabled = pref_service->GetBoolean(kBraveMediaRouter);
