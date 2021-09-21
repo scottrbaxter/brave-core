@@ -21,6 +21,7 @@
 #include "bat/ads/internal/logging.h"
 #include "bat/ads/internal/privacy/challenge_bypass_ristretto_util.h"
 #include "bat/ads/internal/privacy/unblinded_tokens/unblinded_tokens.h"
+#include "bat/ads/internal/tokens/issuers/issuers_value_util.h"
 #include "third_party/abseil-cpp/absl/types/optional.h"
 #include "wrapper.hpp"
 
@@ -119,16 +120,6 @@ void ConfirmationsState::Save() {
       });
 }
 
-CatalogIssuersInfo ConfirmationsState::GetCatalogIssuers() const {
-  return catalog_issuers_;
-}
-
-void ConfirmationsState::SetCatalogIssuers(
-    const CatalogIssuersInfo& catalog_issuers) {
-  DCHECK(is_initialized_);
-  catalog_issuers_ = catalog_issuers;
-}
-
 ConfirmationList ConfirmationsState::GetFailedConfirmations() const {
   DCHECK(is_initialized_);
   return failed_confirmations_;
@@ -187,9 +178,9 @@ void ConfirmationsState::SetNextTokenRedemptionDate(
 std::string ConfirmationsState::ToJson() {
   base::Value dictionary(base::Value::Type::DICTIONARY);
 
-  // Catalog issuers
-  base::Value catalog_issuers_dictionary = catalog_issuers_.ToDictionary();
-  dictionary.SetKey("catalog_issuers", std::move(catalog_issuers_dictionary));
+  // Issuers
+  base::Value issuers = IssuerListToValue(issuers_);
+  dictionary.SetKey("issuers", std::move(issuers));
 
   // Next token redemption date
   dictionary.SetKey("next_token_redemption_date_in_seconds",
@@ -239,8 +230,8 @@ bool ConfirmationsState::FromJson(const std::string& json) {
     return false;
   }
 
-  if (!ParseCatalogIssuersFromDictionary(dictionary)) {
-    BLOG(1, "Failed to parse catalog issuers");
+  if (!ParseIssuersFromDictionary(dictionary)) {
+    BLOG(1, "Failed to parse issuers");
   }
 
   if (!ParseNextTokenRedemptionDateFromDictionary(dictionary)) {
@@ -270,21 +261,14 @@ bool ConfirmationsState::FromJson(const std::string& json) {
   return true;
 }
 
-bool ConfirmationsState::ParseCatalogIssuersFromDictionary(
-    base::DictionaryValue* dictionary) {
-  DCHECK(dictionary);
+void ConfirmationsState::SetIssuers(const IssuerList& issuers) {
+  DCHECK(is_initialized_);
+  issuers_ = issuers;
+}
 
-  base::Value* catalog_issuers_dictionary =
-      dictionary->FindDictKey("catalog_issuers");
-  if (!catalog_issuers_dictionary) {
-    return false;
-  }
-
-  if (!catalog_issuers_.FromDictionary(catalog_issuers_dictionary)) {
-    return false;
-  }
-
-  return true;
+IssuerList ConfirmationsState::GetIssuers() const {
+  DCHECK(is_initialized_);
+  return issuers_;
 }
 
 base::Value ConfirmationsState::GetFailedConfirmationsAsDictionary(
@@ -504,6 +488,25 @@ bool ConfirmationsState::GetFailedConfirmationsFromDictionary(
   }
 
   *confirmations = new_failed_confirmations;
+
+  return true;
+}
+
+bool ConfirmationsState::ParseIssuersFromDictionary(
+    base::DictionaryValue* dictionary) {
+  DCHECK(dictionary);
+
+  base::Value* value = dictionary->FindListKey("issuers");
+  if (!value || !value->is_list()) {
+    return false;
+  }
+
+  const absl::optional<IssuerList> issuers = ValueToIssuerList(*value);
+  if (!issuers) {
+    return false;
+  }
+
+  issuers_ = issuers.value();
 
   return true;
 }
