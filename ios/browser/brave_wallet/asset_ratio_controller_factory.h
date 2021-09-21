@@ -38,7 +38,9 @@ class AssetRatioControllerFactory : public BrowserStateKeyedServiceFactory {
   web::BrowserState* GetBrowserStateToUse(
       web::BrowserState* context) const override;
 
-  DISALLOW_COPY_AND_ASSIGN(AssetRatioControllerFactory);
+  AssetRatioControllerFactory(const AssetRatioControllerFactory&) = delete;
+  AssetRatioControllerFactory& operator=(const AssetRatioControllerFactory&) =
+      delete;
 };
 
 }  // namespace brave_wallet

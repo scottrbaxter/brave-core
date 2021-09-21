@@ -43,7 +43,9 @@ class EthJsonRpcControllerFactory : public BrowserStateKeyedServiceFactory {
   web::BrowserState* GetBrowserStateToUse(
       web::BrowserState* context) const override;
 
-  DISALLOW_COPY_AND_ASSIGN(EthJsonRpcControllerFactory);
+  EthJsonRpcControllerFactory(const EthJsonRpcControllerFactory&) = delete;
+  EthJsonRpcControllerFactory& operator=(const EthJsonRpcControllerFactory&) =
+      delete;
 };
 
 }  // namespace brave_wallet

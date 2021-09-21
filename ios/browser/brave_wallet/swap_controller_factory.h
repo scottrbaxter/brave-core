@@ -38,7 +38,8 @@ class SwapControllerFactory : public BrowserStateKeyedServiceFactory {
   web::BrowserState* GetBrowserStateToUse(
       web::BrowserState* context) const override;
 
-  DISALLOW_COPY_AND_ASSIGN(SwapControllerFactory);
+  SwapControllerFactory(const SwapControllerFactory&) = delete;
+  SwapControllerFactory& operator=(const SwapControllerFactory&) = delete;
 };
 
 }  // namespace brave_wallet

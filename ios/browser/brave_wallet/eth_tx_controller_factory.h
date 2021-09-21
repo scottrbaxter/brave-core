@@ -38,7 +38,8 @@ class EthTxControllerFactory : public BrowserStateKeyedServiceFactory {
   web::BrowserState* GetBrowserStateToUse(
       web::BrowserState* context) const override;
 
-  DISALLOW_COPY_AND_ASSIGN(EthTxControllerFactory);
+  EthTxControllerFactory(const EthTxControllerFactory&) = delete;
+  EthTxControllerFactory& operator=(const EthTxControllerFactory&) = delete;
 };
 
 }  // namespace brave_wallet
