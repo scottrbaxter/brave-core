@@ -5,7 +5,6 @@
 
 #include "chrome/browser/media/router/media_router_feature.h"
 
-#include "brave/common/pref_names.h"
 #include "content/public/browser/browser_context.h"
 
 #define MediaRouterEnabled MediaRouterEnabled_ChromiumImpl
