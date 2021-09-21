@@ -190,11 +190,6 @@ void AdNotificationPopup::OnThemeChanged() {
 void AdNotificationPopup::OnWidgetDestroyed(views::Widget* widget) {
   DCHECK(widget);
 
-  const std::string notification_id = ad_notification_.id();
-  DCHECK(!notification_id.empty());
-
-  AdNotificationPopupCollection::Erase(notification_id);
-
   DCHECK(widget_observation_.IsObservingSource(widget));
   widget_observation_.Reset();
 }
@@ -246,6 +241,11 @@ void AdNotificationPopup::MovePopup(const gfx::Vector2d& movement) {
 }
 
 void AdNotificationPopup::ClosePopup() {
+  const std::string notification_id = ad_notification_.id();
+  DCHECK(!notification_id.empty());
+
+  AdNotificationPopupCollection::Erase(notification_id);
+
   FadeOut();
 }
 

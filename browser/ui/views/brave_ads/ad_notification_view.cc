@@ -109,13 +109,8 @@ void AdNotificationView::OnMouseReleased(const ui::MouseEvent& event) {
 
   AdNotificationDelegate* delegate = ad_notification_.delegate();
   if (delegate) {
+    // This call will eventually lead to AdNotificationPopupHandler::Close call.
     delegate->OnClick();
-  }
-
-  AdNotificationPopup* parent_popup =
-      AdNotificationPopupCollection::Get(ad_notification_.id());
-  if (parent_popup) {
-    parent_popup->ClosePopup();
   }
 
   View::OnMouseReleased(event);
