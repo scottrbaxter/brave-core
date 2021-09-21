@@ -7,7 +7,9 @@
 
 #include <string>
 
+#include "brave/browser/ui/brave_ads/ad_notification_delegate.h"
 #include "brave/browser/ui/views/brave_ads/ad_notification_popup.h"
+#include "brave/browser/ui/views/brave_ads/ad_notification_popup_collection.h"
 #include "brave/browser/ui/views/brave_ads/bounds_util.h"
 #include "brave/grit/brave_generated_resources.h"
 #include "ui/accessibility/ax_enums.mojom.h"
@@ -43,8 +45,16 @@ void AdNotificationView::OnCloseButtonPressed() {
 
   is_closing_ = true;
 
-  const std::string id = ad_notification_.id();
-  AdNotificationPopup::Close(id, /* by_user */ true);
+  AdNotificationDelegate* delegate = ad_notification_.delegate();
+  if (delegate) {
+    delegate->OnClose(/* by_user */ true);
+  }
+
+  AdNotificationPopup* parent_popup =
+      AdNotificationPopupCollection::Get(ad_notification_.id());
+  if (parent_popup) {
+    parent_popup->ClosePopup();
+  }
 }
 
 void AdNotificationView::GetAccessibleNodeData(ui::AXNodeData* node_data) {
@@ -78,11 +88,11 @@ bool AdNotificationView::OnMouseDragged(const ui::MouseEvent& event) {
     return false;
   }
 
-  const std::string id = ad_notification_.id();
-  gfx::Rect bounds = AdNotificationPopup::GetBounds(id) + movement;
-  const gfx::NativeView native_view = GetWidget()->GetNativeView();
-  AdjustBoundsAndSnapToFitWorkAreaForNativeView(native_view, &bounds);
-  GetWidget()->SetBounds(bounds);
+  AdNotificationPopup* parent_popup =
+      AdNotificationPopupCollection::Get(ad_notification_.id());
+  if (parent_popup) {
+    parent_popup->MovePopup(movement);
+  }
 
   return true;
 }
@@ -97,8 +107,16 @@ void AdNotificationView::OnMouseReleased(const ui::MouseEvent& event) {
     return;
   }
 
-  const std::string id = ad_notification_.id();
-  AdNotificationPopup::OnClick(id);
+  AdNotificationDelegate* delegate = ad_notification_.delegate();
+  if (delegate) {
+    delegate->OnClick();
+  }
+
+  AdNotificationPopup* parent_popup =
+      AdNotificationPopupCollection::Get(ad_notification_.id());
+  if (parent_popup) {
+    parent_popup->ClosePopup();
+  }
 
   View::OnMouseReleased(event);
 }
