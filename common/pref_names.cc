@@ -95,6 +95,11 @@ const char kImportDialogPayments[] = "import_dialog_payments";
 const char kMRUCyclingEnabled[] = "brave.mru_cycling_enabled";
 const char kTabsSearchShow[] = "brave.tabs_search_show";
 const char kDontAskForCrashReporting[] = "brave.dont_ask_for_crash_reporting";
+
+// Cast extension requires a browser restart once the setting is toggled.
+// kBraveMediaRouter is used as a proxy to identify the current state of the
+// switch and prefs::kEnableMediaRouter is updated to kBraveMediaRouter
+// on restart.
 const char kBraveMediaRouter[] = "brave.media_router";
 
 #if BUILDFLAG(ENABLE_BRAVE_VPN)
