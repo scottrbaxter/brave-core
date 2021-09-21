@@ -8,25 +8,25 @@
 #include <iostream>
 #include <vector>
 
-//#include "brave/components/skus/browser/br-rs/brave-rewards-cxx/src/wrapper.hpp"
+#include "brave/components/skus/browser/br-rs/brave-rewards-cxx/src/wrapper.hpp"
 #include "components/prefs/pref_service.h"
 
-// using namespace std;
-// using namespace rust::cxxbridge1;
-// using namespace brave_rewards;
+using namespace std;
+using namespace rust::cxxbridge1;
+using namespace brave_rewards;
 
-// namespace rust {
-// inline namespace cxxbridge1 {
+namespace rust {
+inline namespace cxxbridge1 {
 
-// Str::Str(const Str &) = default;
+Str::Str(const Str &) = default;
 
-// } // namespace cxxbridge1
-// } // namespace rust
+} // namespace cxxbridge1
+} // namespace rust
 
 namespace brave_rewards {
 
-// RefreshOrderCallbackState::RefreshOrderCallbackState() = default;
-// RefreshOrderCallbackState::~RefreshOrderCallbackState() = default;
+RefreshOrderCallbackState::RefreshOrderCallbackState() = default;
+RefreshOrderCallbackState::~RefreshOrderCallbackState() = default;
 
 // HttpRequest::HttpRequest() = default;
 // HttpRequest::~HttpRequest() = default;
@@ -51,22 +51,35 @@ namespace brave_rewards {
 //   callback(std::move(ctx), resp);
 // }
 
-// void RefreshOrderCallbackState::cb(RewardsResult result,
-//                                    rust::cxxbridge1::Str order) {
-//   if (CbFunc) {
-//     CbFunc(result, order);
-//   }
-// }
+void RefreshOrderCallbackState::cb(RewardsResult result,
+                                   rust::cxxbridge1::Str order) {
+  cout<<"result:"<<unsigned(result)<<"\n";
+  cout<<"order:"<<order<<"\n";
 
-SkusSdkImpl::SkusSdkImpl(PrefService* prefs) {
-  // TODO: fill me in
+  if (CbFunc) {
+    CbFunc(result, order);
+  }
+}
+
+SkusSdkImpl::SkusSdkImpl(PrefService* prefs) {}
+// SkusSdkImpl::SkusSdkImpl(PrefService* prefs) : prefs_(prefs) {}
+
+void on_refresh_order(
+  std::unique_ptr<RefreshOrderCallbackState> callback_state,
+  RewardsResult result,
+  rust::cxxbridge1::Str order
+) {
+    callback_state->cb(result, order);
 }
 
 void SkusSdkImpl::RefreshOrder(uint32_t order_id,
                                RefreshOrderCallback callback) {
   LOG(ERROR) << "BSC]] LOL INSIDE THE BROWSER PROCESS! ORDERID=" << order_id;
 
-  // TODO: fill me in
+  Box<CppSDK> sdk = initialize_sdk("local");
+  std::unique_ptr<RefreshOrderCallbackState> cbs (new RefreshOrderCallbackState);
+
+  sdk->refresh_order(on_refresh_order, std::move(cbs), "b788a168-1136-411f-9546-43a372a2e3ed");
 
   std::move(callback).Run("{\"demo\":\"true\"}");
 }

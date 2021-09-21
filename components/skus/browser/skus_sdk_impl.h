@@ -21,6 +21,9 @@ class SkusSdkImpl final : public skus::mojom::SkusSdk {
 
   void RefreshOrder(uint32_t order_id, RefreshOrderCallback callback) override;
   void FetchOrderCredentials(uint32_t order_id) override;
+
+ // private:
+ //  PrefService* prefs_;
 };
 
 }  // namespace brave_rewards
