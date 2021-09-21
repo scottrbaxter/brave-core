@@ -278,6 +278,13 @@ handler.on(WalletActions.sendTransaction.getType(), async (store, payload: SendT
 
 handler.on(WalletActions.approveTransaction.getType(), async (store, txInfo: TransactionInfo) => {
   const apiProxy = await getAPIProxy()
+  console.log(txInfo)
+  const {success, path, message, vendor} = await apiProxy.ethTxController.getMessageToSignOnHardwareDevice(txInfo.txData)
+  if (success) {
+    var device_keyring = await apiProxy.getKeyringsByType(vendor)
+    console.log(await device_keyring.signTransaction(path, message))
+    return
+  }
   await apiProxy.ethTxController.approveTransaction(txInfo.id)
   await refreshWalletInfo(store)
 })

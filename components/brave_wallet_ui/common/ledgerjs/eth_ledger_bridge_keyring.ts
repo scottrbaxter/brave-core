@@ -47,6 +47,16 @@ export default class LedgerBridgeKeyring extends EventEmitter {
     return this.isUnlocked()
   }
 
+  signTransaction = async (path: string, rawTxHex: string) => {
+    console.log('signTransaction = async', path, rawTxHex, this.isUnlocked());
+    if (!this.isUnlocked() && !(await this.unlock())) {
+      console.log('Unable to unlock device, try to reconnect');
+      return new Error('Unable to unlock device, try to reconnect')
+    }
+    console.log(this.app);
+    return this.app.signTransaction(path, rawTxHex)
+  }
+
   /* PRIVATE METHODS */
   _getPathForIndex = (index: number, scheme: string) => {
     if (scheme === LedgerDerivationPaths.LedgerLive) {

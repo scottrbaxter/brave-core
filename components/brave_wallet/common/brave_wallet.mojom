@@ -341,6 +341,7 @@ interface EthTxController {
   // This returns different data depending on which network is currently selected in EthJsonRpcController
   GetAllTransactionInfo(string from) => (array<TransactionInfo> transaction_infos);
   AddObserver(pending_remote<EthTxControllerObserver> observer);
+  GetMessageToSignOnHardwareDevice(TxData1559 tx_data) => (bool success, string path, string message, string vendor);
 };
 
 interface BraveWalletService {

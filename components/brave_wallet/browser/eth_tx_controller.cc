@@ -291,6 +291,32 @@ void EthTxController::AddUnapproved1559Transaction(
   std::move(callback).Run(true, meta.id, "");
 }
 
+void EthTxController::GetMessageToSignOnHardwareDevice(
+    mojom::TxData1559Ptr tx_data,
+    GetMessageToSignOnHardwareDeviceCallback callback) {
+  std::string error;
+  if (!EthTxController::ValidateTxData1559(tx_data, &error)) {
+    std::move(callback).Run(false, "", "", "");
+    return;
+  }
+  auto tx = Eip1559Transaction::FromTxData(tx_data, false);
+  if (!tx) {
+    std::move(callback).Run(false, "", "", "");
+    return;
+  }
+  uint256_t chain_id = 0;
+  if (!HexValueToUint256(rpc_controller_->GetChainId(), &chain_id)) {
+    std::move(callback).Run(false, "", "", "");
+    return;
+  }
+
+  auto message = tx->GetMessageToSign(chain_id);
+  auto encoded = base::HexEncode(message);
+
+  std::move(callback).Run(true, "m/44'/60'/0'/0/0", encoded,
+                          mojom::kLedgerHardwareVendor);
+}
+
 void EthTxController::ApproveTransaction(const std::string& tx_meta_id,
                                          ApproveTransactionCallback callback) {
   std::unique_ptr<EthTxStateManager::TxMeta> meta =

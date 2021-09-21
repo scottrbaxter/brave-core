@@ -34,7 +34,7 @@ reducer.on(PanelActions.navigateTo, (state: any, selectedPanel: string) => {
     // TODO(bbondy): This should be hooked up a localization label
     panelTitle = 'Select Network'
   }
-
+  console.log(selectedPanel, panelTitle)
   return {
     ...state,
     selectedPanel,

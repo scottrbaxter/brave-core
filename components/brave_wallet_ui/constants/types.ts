@@ -448,6 +448,13 @@ export interface ApproveTransactionReturnInfo {
   status: boolean
 }
 
+export interface GetMessageToSignOnHardwareDeviceReturnInfo {
+  success: boolean
+  path: string
+  message: string
+  vendor: string
+}
+
 export interface RejectTransactionReturnInfo {
   status: boolean
 }
@@ -490,6 +497,7 @@ export interface EthTxController {
   makeERC20TransferData: (toAddress: string, amount: string) => Promise<MakeERC20TransferDataReturnInfo>
   makeERC20ApproveData: (spenderAddress: string, amount: string) => Promise<MakeERC20ApproveDataReturnInfo>
   getAllTransactionInfo: (fromAddress: string) => Promise<GetAllTransactionInfoReturnInfo>
+  getMessageToSignOnHardwareDevice: (txData: TxData1559) => Promise<GetMessageToSignOnHardwareDeviceReturnInfo>
 }
 
 export interface EthJsonRpcController {

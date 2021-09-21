@@ -57,6 +57,7 @@ handler.on(WalletActions.initialize.getType(), async (store) => {
   // Parse webUI URL, dispatch showConnectToSite action if needed.
   // TODO(jocelyn): Extract ConnectToSite UI pieces out from panel UI.
   const url = new URL(window.location.href)
+  console.log(url.hash)
   if (url.hash === '#connectWithSite') {
     const tabId = Number(url.searchParams.get('tabId')) || -1
     const accounts = url.searchParams.getAll('addr') || []
@@ -116,6 +117,7 @@ handler.on(PanelActions.showApproveTransaction.getType(), async (store, payload:
   store.dispatch(PanelActions.navigateTo('approveTransaction'))
   const apiProxy = await getAPIProxy()
   apiProxy.showUI()
+  console.log("showUI")
 })
 
 handler.on(PanelActions.addEthereumChain.getType(), async (store, payload: EthereumChainPayload) => {
@@ -134,10 +136,6 @@ handler.on(PanelActions.addEthereumChainRequestCompleted.getType(), async (store
     return
   }
   apiProxy.closeUI()
-})
-
-handler.on(PanelActions.showApproveTransaction.getType(), async (store) => {
-  store.dispatch(PanelActions.navigateTo('approveTransaction'))
 })
 
 handler.on(PanelActions.setupWallet.getType(), async (store) => {
@@ -183,9 +181,11 @@ handler.on(PanelActions.openWalletSettings.getType(), async (store) => {
 handler.on(WalletActions.transactionStatusChanged.getType(), async (store, payload: TransactionStatusChanged) => {
   const state = getPanelState(store)
   const walletState = getWalletState(store)
+  console.log(walletState.pendingTransactions, payload)
   if (payload.txInfo.txStatus === TransactionStatus.Submitted ||
     payload.txInfo.txStatus === TransactionStatus.Rejected ||
     payload.txInfo.txStatus === TransactionStatus.Approved) {
+    console.log(state.selectedPanel, walletState.pendingTransactions)
     if (state.selectedPanel === 'approveTransaction' && walletState.pendingTransactions.length === 0) {
       const apiProxy = await getAPIProxy()
       apiProxy.closeUI()

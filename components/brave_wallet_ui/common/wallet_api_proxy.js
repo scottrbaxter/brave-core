@@ -59,6 +59,7 @@ export default class WalletApiProxy {
 
   getKeyringsByType(type) {
     if (type == HardwareWallet.Ledger) {
+      console.log("getKeyringsByType", type, this.ledgerHardwareKeyring)
       return this.ledgerHardwareKeyring;
     }
     return this.keyringController;
