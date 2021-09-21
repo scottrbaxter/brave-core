@@ -30,7 +30,7 @@ function Onboarding (props: Props) {
     onSubmit,
     onShowRestore,
     onImportMetaMask,
-    onImportBraveLegacy
+    onImportBraveLegacy,
   } = props
   const [onboardingStep, setOnboardingStep] = React.useState<WalletOnboardingSteps>(WalletOnboardingSteps.OnboardingWelcome)
   const [password, setPassword] = React.useState<string>('')

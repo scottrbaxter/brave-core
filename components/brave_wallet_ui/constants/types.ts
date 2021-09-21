@@ -201,6 +201,8 @@ export interface PageState {
   showIsRestoring: boolean
   importError: boolean
   showAddModal: boolean
+  isBraveCryptoWalletInstalled: boolean
+  isMetamaskInstalled: boolean
 }
 
 export interface WalletPageState {

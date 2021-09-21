@@ -70,3 +70,8 @@ export type SelectAssetPayloadType = {
   btcPriceInfo: AssetPriceInfo | undefined,
   timeFrame: AssetPriceTimeframe
 }
+
+export type ImportFromExternalWalletPayloadType = {
+  password: string,
+  newPassword: string
+}

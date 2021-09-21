@@ -32,7 +32,9 @@ const defaultState: PageState = {
   portfolioPriceHistory: [],
   isFetchingPriceHistory: false,
   showIsRestoring: false,
-  setupStillInProgress: false
+  setupStillInProgress: false,
+  isBraveCryptoWalletInstalled: false,
+  isMetamaskInstalled: false
 }
 
 const reducer = createReducer<PageState>({}, defaultState)
@@ -139,6 +141,20 @@ reducer.on(Actions.setShowAddModal, (state: PageState, payload: boolean) => {
   return {
     ...state,
     showAddModal: payload
+  }
+})
+
+reducer.on(Actions.setBraveCryptoWalletInstalled, (state: PageState, payload: boolean) => {
+  return {
+    ...state,
+    isBraveCryptoWalletInstalled: payload
+  }
+})
+
+reducer.on(Actions.setMetamaskInstalled, (state: PageState, payload: boolean) => {
+  return {
+    ...state,
+    isMetamaskInstalled: payload
   }
 })
 

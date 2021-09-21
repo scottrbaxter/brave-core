@@ -17,7 +17,8 @@ import {
   RemoveImportedAccountPayloadType,
   RemoveHardwareAccountPayloadType,
   ViewPrivateKeyPayloadType,
-  ImportAccountFromJsonPayloadType
+  ImportAccountFromJsonPayloadType,
+  ImportFromExternalWalletPayloadType
 } from '../constants/action_types'
 import {
   HardwareWalletAccount
@@ -144,6 +145,26 @@ handler.on(WalletPageActions.removeHardwareAccount.getType(), async (store, payl
   const keyringController = (await getAPIProxy()).keyringController
   await keyringController.removeHardwareAccount(payload.address)
   store.dispatch(WalletPageActions.setShowAddModal(false))
+})
+
+handler.on(WalletPageActions.checkWalletsToImport.getType(),  async (store) => {
+  const braveWalletService = (await getAPIProxy()).braveWalletService
+  const cwResult =  await braveWalletService.isBraveCryptoWalletInstalled()
+  const mmResult =  await braveWalletService.isMetamaskInstalled()
+  store.dispatch(WalletPageActions.setBraveCryptoWalletInstalled(cwResult.installed))
+  store.dispatch(WalletPageActions.setMetamaskInstalled(mmResult.installed))
+})
+
+handler.on(WalletPageActions.importFromBraveCryptoWallet.getType(), async (store, payload: ImportFromExternalWalletPayloadType) => {
+  const braveWalletService = (await getAPIProxy()).braveWalletService
+  const result = await braveWalletService.importFromBraveCryptoWallet(payload.password, payload.newPassword)
+  store.dispatch(WalletPageActions.setImportError(!result.success))
+})
+
+handler.on(WalletPageActions.importFromMetamask.getType(), async (store, payload: ImportFromExternalWalletPayloadType) => {
+  const braveWalletService = (await getAPIProxy()).braveWalletService
+  const result = await braveWalletService.importFromMetamask(payload.password, payload.newPassword)
+  store.dispatch(WalletPageActions.setImportError(!result.success))
 })
 
 handler.on(WalletActions.newUnapprovedTxAdded.getType(), async (store, payload: NewUnapprovedTxAdded) => {
