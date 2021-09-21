@@ -9,7 +9,7 @@
 #include <utility>
 
 #include "brave/browser/ui/brave_tooltips/brave_tooltip_attributes.h"
-#include "brave/browser/ui/brave_tooltips/brave_tooltip_popup.h"
+#include "brave/browser/ui/views/brave_tooltips/brave_tooltip_popup.h"
 #include "chrome/browser/profiles/profile.h"
 #include "components/grit/brave_components_strings.h"
 #include "ui/base/l10n/l10n_util.h"

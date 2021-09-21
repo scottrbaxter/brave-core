@@ -24,4 +24,8 @@ source_set("tooltips") {
     "//chrome/browser/profiles:profile",
     "//ui/base",
   ]
+
+  if (is_win || is_linux || is_mac) {
+    deps += [ "//brave/browser/ui/views/brave_tooltips" ]
+  }
 }
