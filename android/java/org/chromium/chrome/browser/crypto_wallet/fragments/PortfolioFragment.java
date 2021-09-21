@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,9 +36,25 @@ import org.chromium.chrome.browser.crypto_wallet.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.chromium.ui.widget.Toast;
+
+import org.chromium.brave_wallet.mojom.AccountInfo;
+import org.chromium.brave_wallet.mojom.KeyringController;
+import org.chromium.base.Log;
+import org.chromium.chrome.browser.crypto_wallet.EthJsonRpcControllerFactory;
+import org.chromium.brave_wallet.mojom.EthJsonRpcController;
+import org.chromium.mojo.bindings.ConnectionErrorHandler;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import java.util.Arrays;
+
+
 public class PortfolioFragment
         extends Fragment implements OnWalletListItemClick, AdapterView.OnItemSelectedListener {
     Spinner mSpinner;
+    TextView mBalance;
 
     public static PortfolioFragment newInstance() {
         return new PortfolioFragment();
@@ -85,6 +102,14 @@ public class PortfolioFragment
 
         mSpinner = view.findViewById(R.id.spinner);
         mSpinner.setOnItemSelectedListener(this);
+
+        mBalance = view.findViewById(R.id.balance);
+        mBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdatePortfolio();
+            }
+        });
 
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
@@ -169,5 +194,77 @@ public class PortfolioFragment
     @Override
     public void onAssetClick() {
         Utils.openAssetDetailsActivity(getActivity());
+    }
+
+    private void UpdatePortfolio() {
+        try {
+            // For current network:
+            // Get all accounts
+            KeyringController keyringController = getKeyringController();
+            assert keyringController != null;
+            keyringController.getDefaultKeyringInfo(keyringInfo -> {
+                if (keyringInfo != null) {
+                    AccountInfo[] accountInfos = keyringInfo.accountInfos;
+                    EthJsonRpcController rpcController =  getEthJsonRpcController();
+                    ArrayList<CompletableFuture<Void>> futures = new ArrayList<>();
+
+                    for (AccountInfo accountInfo : accountInfos) {
+                        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                            Log.e("TAGAB", "IN FUTURE: accountInfo.address="+accountInfo.address);
+                            rpcController.getBalance(accountInfo.address, (result, balance) -> {
+                                    Log.e("TAG", "result="+result);
+                                    Log.e("TAG", "balance="+balance);
+                            });
+                        });
+                        futures.add(future);
+                    }
+
+                    Log.e("TAG", "Waiting for all futures to complete");
+
+                    // OK
+                    String[] stringArr = new String[10];
+
+                    //W/System.err(4422): java.lang.ClassCastException: java.lang.Object[] cannot be cast to java.util.concurrent.CompletableFuture[]
+                    CompletableFuture<Void> all = CompletableFuture.allOf((CompletableFuture<Void>[])futures.toArray());
+
+                    // error: generic array creation
+                    //CompletableFuture<Void>[] futureArr = new CompletableFuture<Void>[accountInfos.length];
+                    //CompletableFuture<Void> all = CompletableFuture.allOf(futures.toArray(futureArr));
+
+                    // error: generic array creation
+                    // CompletableFuture<Void> all = CompletableFuture.allOf(
+                    //     Arrays.stream(futures.toArray(CompletableFuture<Void>[]::new))
+                    // );
+
+                    try {
+                        all.get();
+                    } catch(ExecutionException | InterruptedException ex) {
+                        Log.e("TAG", "ExecutionException ex=" + ex);
+                    }
+                }
+            });
+
+        } catch(Exception ex) {
+            Log.e("TAG", "Exception ex="+ex);
+        }
+
+        // For each account get amount in ETH
+
+        // Get ratings
+
+        // Multiply and add
+
+        // Put result
+        mBalance.setText("$347");
+    }
+
+    // TODO(AlexeyBarabash): duplicate the same as AccountsFragment.getKeyringController()
+    private KeyringController getKeyringController() {
+        Activity activity = getActivity();
+        if (activity instanceof BraveWalletActivity) {
+            return ((BraveWalletActivity) activity).getKeyringController();
+        }
+
+        return null;
     }
 }
