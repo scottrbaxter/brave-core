@@ -370,24 +370,20 @@ void BraveAddAboutStrings(content::WebUIDataSource* html_source,
   html_source->AddString("aboutProductLicense", license);
 }
 
-void BraveAddExtensionSettingsLoadTimeData(
-    content::WebUIDataSource* html_source,
-    Profile* profile) {
-  html_source->AddBoolean(
-      "signInAllowedOnNextStartupInitialValue",
-      profile->GetPrefs()->GetBoolean(prefs::kSigninAllowedOnNextStartup));
-
-  html_source->AddBoolean("mediaRouterEnabledInitialValue",
-                          media_router::MediaRouterEnabled(profile));
-}
-
 void BraveAddLocalizedStrings(content::WebUIDataSource* html_source,
                               Profile* profile) {
   BraveAddCommonStrings(html_source, profile);
   BraveAddResources(html_source, profile);
   BraveAddAboutStrings(html_source, profile);
   BravePrivacyHandler::AddLoadTimeData(html_source, profile);
-  BraveAddExtensionSettingsLoadTimeData(html_source, profile);
+
+  // Load time data for brave://settings/extensions
+  html_source->AddBoolean(
+      "signInAllowedOnNextStartupInitialValue",
+      profile->GetPrefs()->GetBoolean(prefs::kSigninAllowedOnNextStartup));
+
+  html_source->AddBoolean("mediaRouterEnabledInitialValue",
+                          media_router::MediaRouterEnabled(profile));
 }
 
 }  // namespace settings

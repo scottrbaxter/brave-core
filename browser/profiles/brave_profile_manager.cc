@@ -86,6 +86,17 @@ void BraveProfileManager::InitProfileUserPrefs(Profile* profile) {
   content_settings::BravePrefProvider::CopyPluginSettingsForMigration(
       profile->GetPrefs());
 
+// Chromecast is enabled by default on Android.
+// For Desktop, kEnableMediaRouterOnRestart is used to track the current
+// state of the media router switch in brave://settings/extensions. The value
+// of kEnableMediaRouter is only updated to match kEnableMediaRouterOnRestart
+// on restart
+#if !defined(OS_ANDROID)
+  auto* pref_service = profile->GetPrefs();
+  auto enabled = pref_service->GetBoolean(kEnableMediaRouterOnRestart);
+  pref_service->SetBoolean(::prefs::kEnableMediaRouter, enabled);
+#endif
+
   ProfileManager::InitProfileUserPrefs(profile);
   brave::RecordInitialP3AValues(profile);
   brave::SetDefaultSearchVersion(profile, profile->IsNewProfile());

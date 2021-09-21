@@ -92,7 +92,7 @@ extern const char kSafetynetStatus[];
 extern const char kDefaultBrowserLaunchingCount[];
 extern const char kTabsSearchShow[];
 extern const char kDontAskForCrashReporting[];
-extern const char kBraveMediaRouter[];
+extern const char kEnableMediaRouterOnRestart[];
 
 #if BUILDFLAG(ENABLE_BRAVE_VPN)
 extern const char kBraveVPNShowButton[];

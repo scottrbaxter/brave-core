@@ -409,7 +409,7 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
 
   registry->SetDefaultPrefValue(prefs::kEnableMediaRouter, base::Value(false));
 
-  registry->RegisterBooleanPref(kBraveMediaRouter, false);
+  registry->RegisterBooleanPref(kEnableMediaRouterOnRestart, false);
 
   RegisterProfilePrefsForMigration(registry);
 }

@@ -97,10 +97,11 @@ const char kTabsSearchShow[] = "brave.tabs_search_show";
 const char kDontAskForCrashReporting[] = "brave.dont_ask_for_crash_reporting";
 
 // Cast extension requires a browser restart once the setting is toggled.
-// kBraveMediaRouter is used as a proxy to identify the current state of the
-// switch and prefs::kEnableMediaRouter is updated to kBraveMediaRouter
-// on restart.
-const char kBraveMediaRouter[] = "brave.media_router";
+// kEnableMediaRouterOnRestart is used as a proxy to identify the current
+// state of the switch and prefs::kEnableMediaRouter is updated to
+// kEnableMediaRouterOnRestart on restart.
+const char kEnableMediaRouterOnRestart[] =
+    "brave.enable_media_router_on_restart";
 
 #if BUILDFLAG(ENABLE_BRAVE_VPN)
 const char kBraveVPNShowButton[] = "brave.brave_vpn.show_button";
