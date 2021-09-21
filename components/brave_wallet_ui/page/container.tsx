@@ -82,13 +82,13 @@ function Container (props: Props) {
     selectedNetwork,
     selectedAccount,
     hasInitialized,
-    userVisibleTokens,
     userVisibleTokensInfo,
     fullTokenList,
     portfolioPriceHistory,
     selectedPortfolioTimeline,
     isFetchingPortfolioPriceHistory,
-    transactionSpotPrices
+    transactionSpotPrices,
+    addUserAssetError
   } = props.wallet
 
   // Page Props
@@ -300,7 +300,7 @@ function Container (props: Props) {
   // This will scrape all of the user's accounts and combine the fiat value for every asset
   const fullPortfolioBalance = React.useMemo(() => {
     const amountList = userAssetList.map((item) => {
-      return fullAssetFiatBalance(item.asset)
+      return item.asset.visible ? fullAssetFiatBalance(item.asset) : 0
     })
     const grandTotal = amountList.reduce(function (a, b) {
       return a + b
@@ -395,10 +395,6 @@ function Container (props: Props) {
     return result ? { success: true } : { success: false }
   }
 
-  const onUpdateVisibleTokens = (contractAddress: string, visible: boolean) => {
-    // Logic Here to Update if a token is visible or not.
-  }
-
   const onSubmitSwap = () => {
     // TODO (DOUGLAS): logic Here to submit a swap transaction
   }
@@ -436,12 +432,16 @@ function Container (props: Props) {
     // Logic here to import a detected MetaMask Wallet
   }
 
-  const onAddCustomToken = (
-    tokenName: string,
-    tokenSymbol: string,
-    tokenContractAddress: string,
-    tokenDecimals: number) => {
-    // Logic Here to add a custom Token
+  const onSetUserAssetVisible = (contractAddress: string, isVisible: boolean) => {
+    props.walletActions.setUserAssetVisible({ contractAddress, chainId: selectedNetwork.chainId, isVisible })
+  }
+
+  const onAddUserAsset = (token: TokenInfo) => {
+    props.walletActions.addUserAsset({ token: token, chainId: selectedNetwork.chainId })
+  }
+
+  const onRemoveUserAsset = (contractAddress: string) => {
+    props.walletActions.removeUserAsset({ contractAddress, chainId: selectedNetwork.chainId })
   }
 
   React.useEffect(() => {
@@ -567,9 +567,7 @@ function Container (props: Props) {
                 showAddModal={showAddModal}
                 onToggleAddModal={onToggleAddModal}
                 onUpdateAccountName={onUpdateAccountName}
-                onUpdateVisibleTokens={onUpdateVisibleTokens}
                 fetchFullTokenList={fetchFullTokenList}
-                userWatchList={userVisibleTokens}
                 selectedNetwork={selectedNetwork}
                 onSelectNetwork={onSelectNetwork}
                 isFetchingPortfolioPriceHistory={isFetchingPortfolioPriceHistory}
@@ -581,10 +579,13 @@ function Container (props: Props) {
                 onSetImportError={onSetImportError}
                 hasImportError={importError}
                 onAddHardwareAccounts={onAddHardwareAccounts}
-                onAddCustomToken={onAddCustomToken}
                 transactionSpotPrices={transactionSpotPrices}
                 userVisibleTokensInfo={userVisibleTokensInfo}
                 getBalance={getBalance}
+                onAddUserAsset={onAddUserAsset}
+                onSetUserAssetVisible={onSetUserAssetVisible}
+                onRemoveUserAsset={onRemoveUserAsset}
+                addUserAssetError={addUserAssetError}
               />
             }
           </Route>

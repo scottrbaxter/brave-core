@@ -465,8 +465,8 @@ export const _DesktopWalletConcept = (args: { onboarding: boolean, locked: boole
     setSelectedNetwork(network)
   }
 
-  const onUpdateWatchList = () => {
-    alert('Will update Watchlist')
+  const onSetUserAssetVisible = () => {
+    alert('Will make a custom asset visible')
   }
 
   const onSelectTransactAsset = (asset: AccountAssetOptionType, toOrFrom: ToOrFromType) => {
@@ -617,12 +617,12 @@ export const _DesktopWalletConcept = (args: { onboarding: boolean, locked: boole
     setImportError(hasError)
   }
 
-  const onAddCustomToken = (
-    tokenName: string,
-    tokenSymbol: string,
-    tokenContractAddress: string,
-    tokenDecimals: number) => {
-    alert({ tokenName, tokenSymbol, tokenContractAddress, tokenDecimals })
+  const onAddUserAsset = () => {
+    alert('Will Add a Token')
+  }
+
+  const onRemoveUserAsset = () => {
+    alert('Will Remove a Token')
   }
 
   return (
@@ -702,9 +702,7 @@ export const _DesktopWalletConcept = (args: { onboarding: boolean, locked: boole
                               showAddModal={showAddModal}
                               onToggleAddModal={onToggleAddModal}
                               onUpdateAccountName={onUpdateAccountName}
-                              onUpdateVisibleTokens={onUpdateWatchList}
                               fetchFullTokenList={fetchFullTokenList}
-                              userWatchList={['1']}
                               selectedNetwork={selectedNetwork}
                               onSelectNetwork={onSelectNetwork}
                               isFetchingPortfolioPriceHistory={false}
@@ -717,7 +715,9 @@ export const _DesktopWalletConcept = (args: { onboarding: boolean, locked: boole
                               onImportAccountFromJson={onImportAccountFromJson}
                               hasImportError={importError}
                               onSetImportError={onSetImportError}
-                              onAddCustomToken={onAddCustomToken}
+                              onAddUserAsset={onAddUserAsset}
+                              onSetUserAssetVisible={onSetUserAssetVisible}
+                              onRemoveUserAsset={onRemoveUserAsset}
                               transactionSpotPrices={[]}
                               userVisibleTokensInfo={[]}
                             />
