@@ -312,4 +312,6 @@ void BraveWalletService::SetUserAssetVisible(
   std::move(callback).Run(true);
 }
 
+void BraveWalletService::OnStatsPingFired() {}
+
 }  // namespace brave_wallet
