@@ -12,6 +12,7 @@
 #include "brave/components/brave_stats/browser/brave_stats_updater_observer.h"
 #include "brave/components/brave_wallet/common/brave_wallet.mojom.h"
 #include "components/keyed_service/core/keyed_service.h"
+#include "components/prefs/pref_change_registrar.h"
 #include "mojo/public/cpp/bindings/pending_receiver.h"
 #include "mojo/public/cpp/bindings/pending_remote.h"
 #include "mojo/public/cpp/bindings/receiver_set.h"
@@ -58,8 +59,12 @@ class BraveWalletService : public KeyedService,
       const std::string& contract_address,
       const std::string& chain_id);
 
+  void OnWalletUnlockPreferenceChanged(const std::string& pref_name);
+  void RecordWalletUsage();
+
   PrefService* prefs_;
   mojo::ReceiverSet<mojom::BraveWalletService> receivers_;
+  PrefChangeRegistrar pref_change_registrar_;
 };
 
 }  // namespace brave_wallet
