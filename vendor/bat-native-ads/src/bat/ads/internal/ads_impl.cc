@@ -401,9 +401,12 @@ void AdsImpl::GetAccountStatement(GetAccountStatementCallback callback) {
   StatementInfo statement;
 
   if (!IsInitialized() || !ShouldRewardUser()) {
+    BLOG(0, "FOOBAR.A");
     callback(/* success */ false, statement);
     return;
   }
+
+  BLOG(0, "FOOBAR.B");
 
   const int64_t to_timestamp =
       static_cast<int64_t>(base::Time::Now().ToDoubleT());
